@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from . import forms
 from . import models
-
+from profiles.models import Profile
 
 class ShowObject(LoginRequiredMixin, generic.TemplateView):
     template_name = "profiles/show_profile.html"
@@ -18,7 +18,7 @@ class ShowObject(LoginRequiredMixin, generic.TemplateView):
     def get(self, request, *args, **kwargs):
         slug = self.kwargs.get('slug')
         if slug:
-            profile = get_object_or_404(models.Profile, slug=slug)
+            profile = get_object_or_404(Profile, slug=slug)
             user = profile.user
         else:
             user = self.request.user
@@ -26,7 +26,9 @@ class ShowObject(LoginRequiredMixin, generic.TemplateView):
         if user == self.request.user:
             kwargs["editable"] = True
         kwargs["show_user"] = user
-        return super(ShowProfile, self).get(request, *args, **kwargs)
+        return super(ShowObject, self).get(request, *args, **kwargs)
+
+
 
 
 class EditObject(LoginRequiredMixin, generic.TemplateView):
@@ -60,5 +62,8 @@ class EditObject(LoginRequiredMixin, generic.TemplateView):
         profile = profile_form.save(commit=False)
         profile.user = user
         profile.save()
+        profile_data=Profile.object.filter(user=user)
+        print(profile_data)
+        # print "abscsdhkjshf"
         messages.success(request, "Profile details saved!")
         return redirect("profiles:show_self")

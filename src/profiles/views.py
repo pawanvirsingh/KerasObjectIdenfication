@@ -5,7 +5,19 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from . import forms
 from . import models
+from keras.applications.vgg16 import VGG16
+from keras.preprocessing.image import img_to_array
+from keras.applications.vgg16 import preprocess_input
+from keras.applications.vgg16 import decode_predictions
+import numpy as np
+from keras.preprocessing.image import load_img
 
+def load_model():
+    """Loading model"""
+    model = VGG16()
+    return model
+
+model = load_model()
 
 class ShowProfile(LoginRequiredMixin, generic.TemplateView):
     template_name = "profiles/show_profile.html"
@@ -56,5 +68,38 @@ class EditProfile(LoginRequiredMixin, generic.TemplateView):
         profile = profile_form.save(commit=False)
         profile.user = user
         profile.save()
-        messages.success(request, "Profile details saved!")
+        profile_data=models.Profile.objects.filter(user=user).first()
+        print(profile_data)
+        a= findtheobject(test_img = profile_data.picture)
+        # messages.success(request, "Profile details saved!")
+        messages.success(request, str(a))
         return redirect("profiles:show_self")
+
+
+def load_image(image):
+    """Loading image"""
+    im = load_img(image, target_size=(224, 224))
+    return im
+def extend_size(image):
+    image = np.expand_dims(image,size=(224,) axis=0)
+    return image
+size=(128,)# model = load_model()
+# test_img = "car.jpg"
+"""
+target_x = 244
+target_y = 244
+resize_pixels = [target_x, target_y]
+"""
+def findtheobject(test_img = "bik.jpeg"):
+    
+
+    image = load_image("/home/pawan/machine_learning_imgage/Machine_Object_Identification/src/media/"+str(test_img))
+    image = img_to_arunrray(image)
+    image = preprocess_input(image)
+    #image = load_image(test_img, )
+    image = extend_size(image)
+    y_pred = model.predict(image)
+    label = decode_predictions(y_pred)
+    print (label)
+    return label
+

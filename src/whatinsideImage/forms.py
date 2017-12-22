@@ -21,5 +21,5 @@ class ObjectForm(forms.ModelForm):
             )
 
     class Meta:
-        model = models.Profile
-        fields = ['picture', 'bio','result']
+        model = models.ObjectUploads
+        fields = ['picture','result']

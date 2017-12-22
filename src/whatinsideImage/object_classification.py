@@ -38,4 +38,4 @@ def findtheobject(test_img = "bik.jpeg"):
 	print (label)
 	return label
 
-a= findtheobject(test_img = "pus.jpg")
+# a= findtheobject(test_img = "pus.jpg")

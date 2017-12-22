@@ -1,12 +1,12 @@
 from __future__ import unicode_literals
-
+import uuid
 from django.db import models
 
 # Create your models here.
 class ObjectUploads(models.Model):
     # user = models.OneToOneField(settings.AUTH_USER_MODEL,
     #                             primary_key=True)
-    # slug = models.UUIDField(default=uuid.uuid4, blank=True, editable=False)
+    slug = models.UUIDField(default=uuid.uuid4, blank=True, editable=False)
     # Add more user profile fields here. Make sure they are nullable
     # or with default values
     picture = models.ImageField('ObjectUploads picture',
